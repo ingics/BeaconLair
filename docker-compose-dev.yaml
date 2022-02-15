@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+
+  rchost:
+    build:
+      context: rchost
+      target: development
+    volumes:
+      - ./rchost:/app
+    ports:
+      - ${REMOTE_CONTROL_PORT}:5000
+      - ${REMOTE_CONTROL_ADMIN_PORT}:5001
+    depends_on:
+      - influxdb
+    environment:
+      - MQTT_PORT=${MQTT_PORT}
+
+  parser:
+    build:
+      context: parser
+      target: development
+    volumes:
+      - ./parser:/app
+    ports:
+      - ${PARSER_STATISTIC_PORT}:9000
+    depends_on:
+      - broker
+      - influxdb
+
+  broker:
+    image: eclipse-mosquitto:2.0
+    ports:
+      - ${MQTT_PORT}:1883
+    volumes:
+      - ./broker/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./broker/mosquitto.passwd:/mosquitto/config/mosquitto.passwd
+
+  grafana:
+    image: grafana/grafana-enterprise:8.3.0
+    ports:
+      - ${GRAFANA_PORT}:3000
+    depends_on:
+      - influxdb
+    environment:
+      - GF_INSTALL_PLUGINS=gapit-htmlgraphics-panel,marcusolsson-json-datasource
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning:/etc/grafana/provisioning
+
+  influxdb:
+    image: influxdb:2.1.1-alpine
+    ports:
+      - ${INFLUXDB_PORT}:8086
+    volumes:
+      - ./influxdb/config.yml:/etc/influxdb2/config.yml
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=beaconlair
+      - DOCKER_INFLUXDB_INIT_PASSWORD=beaconlair
+      - DOCKER_INFLUXDB_INIT_ORG=beaconlair
+      - DOCKER_INFLUXDB_INIT_BUCKET=db0
+      - DOCKER_INFLUXDB_INIT_RETENTION=3d
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=beaconlair

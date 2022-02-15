@@ -1,0 +1,20 @@
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB_v2_Flux
+    type: influxdb
+    access: proxy
+    url: http://influxdb:8086
+    secureJsonData:
+      token: beaconlair
+    jsonData:
+      version: Flux
+      organization: beaconlair
+      defaultBucket: db0
+      tlsSkipVerify: true
+    editable: true
+  - name: Rchost
+    type: marcusolsson-json-datasource
+    access: proxy
+    url: http://rchost:5001
+    editable: true

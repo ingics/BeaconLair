@@ -1,0 +1,223 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 2,
+  "iteration": 1644830316696,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "content": "# Gateway Remote Control (RC)\n\nThis dashboard list all iGS0X devices which connected to the BeaconLair Gateway Remote Control service.</br>\nAfter connected to BeaconLair RC, you can perform auto-configuration on gateways to work with BeaconLait System.\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.3.0",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "marcusolsson-json-datasource",
+        "uid": "PA81ABC091705574F"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 2,
+      "maxPerRow": 3,
+      "options": {
+        "SVGBaseFix": true,
+        "add100Percentage": true,
+        "calcsMutation": "standard",
+        "centerAlignContent": true,
+        "codeData": "{\n}",
+        "css": "* {\n  font-family: Open Sans;\n}\n\n.box {\n  border: solid #555 2px;\n  border-radius: 10px;\n  padding: 10px 20px;\n}\n\n.button {\n  border: none;\n  color: white;\n  padding: 6px 8px;\n  text-align: center;\n  text-decoration: none;\n  display: inline-block;\n  font-size: 14px;\n  margin: 4px 4px;\n  cursor: pointer;\n  border-radius: 10px;\n}\n\n.button:disabled, .button[disabled]{\n  border: 1px solid #999999;\n  background-color: #cccccc;\n  color: #666666;\n  cursor: default;\n}\n\n.button1 {background-color: #4CAF50;}\n.button2 {background-color: #008CBA;}",
+        "dynamicData": false,
+        "dynamicFieldDisplayValues": false,
+        "dynamicHtmlGraphics": false,
+        "dynamicProps": false,
+        "html": "<div style=\"padding: 10px;\">\n  <div class=\"box\" style=\"text-align: center; margin: 4px 4px;\">\n    <div id=\"htmlgraphics-value\"></div>\n  </div>\n  <div style=\"padding: 10px; text-align: center; margin: 4px 4px;\">\n    <button id=\"btn-logs\" class=\"button button1\">Logs</button>\n    <button id=\"btn-autoset\" class=\"button button1\">Auto Setup</button>\n    <button id=\"btn-ota\" class=\"button button1\">OTA Update</button>\n    <div id=\"btn-rssi\" class=\"button button2\" style=\"padding: 0px 8px\">\n      <label>RSSI Threshold:</label>\n      <input id=\"input-rssi\" type=\"number\" style=\"width: 50px;\"></input>\n      <button id=\"btn-rssi-submit\" class=\"button button2\" style=\"padding: 2px 4px\">Submit</button>\n    </div>\n  </div>\n</div>\n",
+        "onInit": "// Sets the value from the first series on every refresh\nconsole.log(\"onInit\", data)\n\nfunction getGrafanaVariableValue(variable) {\n  return getTemplateSrv().replace(variable);\n}\n\nconst gateway = getGrafanaVariableValue(\"$gateway\")\nconsole.log(gateway)\n\nfunction handleOkResponse(response) {\n    alert(response.Message)\n}\n\nfunction handleErrorResponse(hdr, status, error) {\n    alert(error);\n}\n\nconst btnOta = htmlNode.getElementById('btn-ota');\nbtnOta.onclick = function() {\n  $.ajax({\n    headers:{  \n      \"Accept\":\"application/json\",\n    },\n    method: \"PUT\",\n    url: \"api/datasources/proxy/2/gateways/\" + gateway + \"/actions/ota\",\n    success: handleOkResponse,\n    error: handleErrorResponse,\n  })\n}\n\nconst btnAutoSet = htmlNode.getElementById('btn-autoset');\nbtnAutoSet.onclick = function() {\n  $.ajax({\n    headers:{  \n      \"Accept\":\"application/json\",\n    },\n    method: \"PUT\",\n    url: \"api/datasources/proxy/2/gateways/\" + gateway + \"/actions/autoset\",\n    success: handleOkResponse,\n    error: handleErrorResponse,\n  })\n}\n\nconst inputRSSI = htmlNode.getElementById('input-rssi');\nconst btnRSSISubmit = htmlNode.getElementById('btn-rssi-submit');\nbtnRSSISubmit.onclick = function() {\n  $.ajax({\n    headers:{  \n      \"Accept\":\"application/json\",\n      \"Content-Type\":\"application/json\",\n    },\n    method: \"PUT\",\n    url: \"api/datasources/proxy/2/gateways/\" + gateway,\n    data: JSON.stringify({ rssi: parseInt(inputRSSI.value) }),\n    success: handleOkResponse,\n    error: handleErrorResponse,\n  })\n}\n\nconst btnLogs = htmlNode.getElementById('btn-logs');\n// btnLogs.style.cursor = 'pointer';\nbtnLogs.onclick = function() {\n  window.location = \"d/_1NVoqa7z/raw-logs?orgId=1&var-gateway=\" + encodeURIComponent(gateway)\n}\n",
+        "onInitOnResize": false,
+        "onRender": "const inputRSSI = htmlNode.getElementById('input-rssi');\nconst htmlgraphicsValue = htmlNode.getElementById('htmlgraphics-value');\n\nconsole.log(\"onRender\", data)\n\nif (Object.keys(data.request.scopedVars).includes(\"gateway\")) {\n  if (data.series.length > 0) {\n    const series = data.series[0]\n    htmlgraphicsValue.innerHTML = \"\"\n    for (i = 0; i < series.length; i++) {\n      for (j = 0; j < series.fields.length; j++) {\n        const field = series.fields[j]\n        if (field.name == \"RssiThreshold\") {\n          inputRSSI.value = field.values.get(0)\n        } else {\n          htmlgraphicsValue.innerHTML += field.name + \": <b>\" + field.values.get(i) + \"</b><br/>\"\n        }\n        if (field.name == \"RC Connected\") {\n            connected = field.values.get(0)\n            console.log(connected)\n            htmlNode.getElementById('btn-ota').disabled = !connected\n            htmlNode.getElementById('btn-autoset').disabled = !connected\n            htmlNode.getElementById('input-rssi').disabled = !connected\n            htmlNode.getElementById('btn-rssi-submit').disabled = !connected\n        }\n      }\n    }\n    htmlNode.getElementById('btn-ota').style.display = \"inline-block\"\n    htmlNode.getElementById('btn-autoset').style.display = \"inline-block\"\n    htmlNode.getElementById('btn-rssi').style.display = \"inline-block\"\n  }\n} else {\n    htmlgraphicsValue.innerHTML = \"No iGS0X device connected\"\n    htmlNode.getElementById('btn-ota').style.display = \"none\"\n    htmlNode.getElementById('btn-autoset').style.display = \"none\"\n    htmlNode.getElementById('btn-rssi').style.display = \"none\"\n}\n",
+        "overflow": "visible",
+        "panelupdateOnMount": true,
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ]
+        },
+        "renderOnMount": true,
+        "rootCSS": ""
+      },
+      "pluginVersion": "8.3.3",
+      "repeat": "gateway",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "cacheDurationSeconds": 300,
+          "datasource": {
+            "type": "marcusolsson-json-datasource",
+            "uid": "PA81ABC091705574F"
+          },
+          "fields": [
+            {
+              "jsonPath": "$.Model"
+            },
+            {
+              "jsonPath": "$.Mac",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$.Fw",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$.BleFw",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$.BleMac",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$.Network",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$.Connected",
+              "language": "jsonpath",
+              "name": "RC Connected"
+            },
+            {
+              "jsonPath": "$.UpTime",
+              "language": "jsonpath",
+              "name": ""
+            },
+            {
+              "jsonPath": "$.RssiThreshold",
+              "language": "jsonpath",
+              "name": ""
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "refId": "A",
+          "urlPath": "/gateways/$gateway"
+        }
+      ],
+      "title": "${gateway}",
+      "transparent": true,
+      "type": "gapit-htmlgraphics-panel"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 33,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "marcusolsson-json-datasource",
+          "uid": "PA81ABC091705574F"
+        },
+        "definition": "$.*~",
+        "hide": 2,
+        "includeAll": true,
+        "multi": false,
+        "name": "gateway",
+        "options": [],
+        "query": {
+          "cacheDurationSeconds": 0,
+          "fields": [
+            {
+              "jsonPath": "$.*~",
+              "name": "",
+              "type": "string"
+            }
+          ],
+          "method": "GET",
+          "queryParams": "",
+          "urlPath": "/gateways"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "hidden": true
+  },
+  "timezone": "",
+  "title": "Gateway Remote Control",
+  "uid": "dwnTbB07z",
+  "version": 5,
+  "weekStart": ""
+}

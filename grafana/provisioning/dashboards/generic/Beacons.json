@@ -1,0 +1,163 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1644818095815,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 116,
+      "options": {
+        "content": "# Overview of all Beacons\n\nThis dashboard display the lastest record of iBS0X beacons.<br/>\nClick on the sensor block to the line chart view of the specified beacon.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "8.3.0",
+      "transparent": true,
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P5697886F9CA74929"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 0,
+        "y": 4
+      },
+      "id": 2,
+      "maxPerRow": 6,
+      "options": {
+        "SVGBaseFix": true,
+        "add100Percentage": true,
+        "calcsMutation": "standard",
+        "centerAlignContent": true,
+        "codeData": "{\n  \"text\": \"Random text\"\n}",
+        "css": "* {\n  font-family: Open Sans;\n}\n\n.box {\n  border: solid #555 2px;\n  border-radius: 10px;\n  padding: 10px 20px;\n}\n",
+        "dynamicData": false,
+        "dynamicFieldDisplayValues": false,
+        "dynamicHtmlGraphics": false,
+        "dynamicProps": false,
+        "html": "<div style=\"padding: 10px 10px\">\n  <div class=\"box\" style=\"text-align: center;\">\n    <div id=\"htmlgraphics-value\"></div>\n    <br />\n    <div id=\"htmlgraphics-ts\"></div>\n  </div>\n</dvi>",
+        "onInit": "",
+        "onInitOnResize": false,
+        "onRender": "// Sets the text from customProperties\nconst htmlgraphicsTS = htmlNode.getElementById('htmlgraphics-ts');\nconst htmlgraphicsValue = htmlNode.getElementById('htmlgraphics-value');\n\nconsole.log(data)\n\nconst mapUnits = {\n  \"battery\": \" V\",\n  \"temperature\": \" ℃\",\n  \"temperature2\": \" ℃\",\n  \"humidity\": \" %\",\n  \"range\": \" mm\",\n  \"co2\": \" ppm\",\n  \"gp\": \" hPa\"\n}\n\nconst events = [\"button\", \"moving\", \"fall\", \"hall\", \"din\", \"ir\", \"pir\"]\n\nif (data.series.length > 0 && data.series[0].fields.length == 2) {\n\n  htmlgraphicsValue.textContent = \"\"\n  // htmlgraphicsValue.innerHTML = \"\"\n  for (i = 0; i < data.series.length; i++) {\n    const fields = data.series[i].fields\n    if (fields.length == 2) {\n      const stype = fields[1].labels.stype\n      const value = fields[1].values.get(0)\n      if (events.includes(stype)) {\n        htmlgraphicsValue.innerHTML += stype + \": \" + ((value == 0) ? \"false\" : \"true\") + \"<br/>\"\n      } else {\n        const unit = Object.keys(mapUnits).includes(stype) ? mapUnits[stype] : \"\"\n        htmlgraphicsValue.innerHTML += stype + \": \" + value + unit + \"<br/>\"\n      }\n    }\n  }\n\n  const tag = data.series[0].fields[1].labels.tag\n  htmlgraphicsValue.style.cursor = 'pointer';\n  htmlgraphicsValue.onclick = function() {\n    window.location = \"d/OTjYRgAnz/beacon-detail?orgId=1&var-sensor=All&var-beacon=\" + encodeURIComponent(tag)\n  }\n\n  const ts = new Date(data.series[0].fields[0].values.get(0))\n  htmlgraphicsTS.textContent = ts.toLocaleString()\n} else {\n  htmlgraphicsValue.textContent = \"No Data\"\n  htmlgraphicsTS.hidden = true\n}\n",
+        "overflow": "auto",
+        "panelupdateOnMount": true,
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ]
+        },
+        "renderOnMount": true,
+        "rootCSS": ""
+      },
+      "repeat": "beacon",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P5697886F9CA74929"
+          },
+          "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"readings\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> filter(fn: (r) => r.tag == \"$beacon\")\n  |> keep(columns: [\"tag\",\"stype\",\"_value\",\"_time\"])\n  |> group(columns: [\"tag\",\"stype\"])\n  |> last()\n  ",
+          "refId": "A"
+        }
+      ],
+      "title": "$beacon",
+      "transparent": true,
+      "type": "gapit-htmlgraphics-panel"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 33,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P5697886F9CA74929"
+        },
+        "definition": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"readings\")\n  |> filter(fn: (r) => true)\n  |> keep(columns: [\"tag\"])\n  |> group()\n  |> distinct(column: \"tag\")",
+        "hide": 2,
+        "includeAll": true,
+        "multi": false,
+        "name": "beacon",
+        "options": [],
+        "query": "from(bucket: v.bucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"readings\")\n  |> filter(fn: (r) => true)\n  |> keep(columns: [\"tag\"])\n  |> group()\n  |> distinct(column: \"tag\")",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Beacons",
+  "uid": "wOnCp8o7z",
+  "version": 4,
+  "weekStart": ""
+}
