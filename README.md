@@ -38,7 +38,7 @@ REBOOT
 ```
 The Host IP is how the iGS03 device connects to the BeaconLair Docker host. And the BeaconLair system will use it to configure the MQTT publish host, too.
 
-Then, open the BeaconLair WebUI (http://<Host IP>/grafana/), click on "Gateway Remote Control" link. You should see the iGS03 device.
+Then, open the BeaconLair URL "http://<Host IP>/grafana/" in browser, click on "Gateway Remote Control" link. You should see the iGS03 device.
 
 ... diagram of remote control UI ...
 
@@ -70,12 +70,12 @@ BeaconLair use InfluxDB as backend database for storing the sensor readings and 
 
 The iBS0X sensor beacons broadcast the sensor readings in BLE advertising packets, and the iGS03 BLE gateway receives and transmits the raw data to the MQTT broker.
 
+So we need a "Parser" service that subscribes to those raw data from the MQTT broker, parses them, and inserts the result into our backend database for further usage (display, alert system, analytic, ... ).
+
 Beacon payload formats:
 - [iBS01](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
 - [iBS02](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
 - [iBS03/04/05](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
-
-Then we have a "Parser" service that subscribes to those data from the MQTT broker. The service parses the raw data and inserts the result into our backend database for further usage.
 
 In BeaconLair, this service was developed in Golang. We also provides parser libraries in some languages for customer to implement their-own service.
 
@@ -87,20 +87,13 @@ Parser libraries:
 ### Gateway Remote Control Service
 
 The iGS03 BLE gateway provides remote control capability. And the BeaconLair provides a simple remote control example (rchost) for:
-- establish the RC connection from iGS03 devices
-- HTTP API interface for command requests
-- execute commands to iGS03 device through RC connection
-
-All telnet commands can be used in remote control connections.
-- [telnet Commands](https://www.ingics.com/doc/Gateway/GW0017_iGS03_Telnet_Command.pdf)
-
-The RC service in BeaconLair provide below APIs:
 - list or query device information
 - auto-configuration for BeaconLair usage (data publish)
 - device OTA upgrade
 - RSSI filter modification
 
-Basiclly,
+All telnet commands can be used in remote control connections.
+- [telnet Commands](https://www.ingics.com/doc/Gateway/GW0017_iGS03_Telnet_Command.pdf)
 
 ### WebUI (Grafana)
 
@@ -110,9 +103,8 @@ The BeaconLair uses Grafana as frontend WebUI to provide dashboards for beacons,
 
 ## Configuration
 
-There are four port configurations placed in .env file.
-You can modify them if there are port conflict on your docker host.
-```
+There are four TCP port configurations placed in the .env file.
+You can modify them if there is a port conflict issue on your docker host.```
 # MQTT port
 MQTT_PORT=1883
 
@@ -125,12 +117,12 @@ INFLUXDB_PORT=8086
 # Grafana port (BeaconLair Dashboards)
 GRAFANA_PORT=3000
 ```
-After change the port setting, restart the container is required.
+After changing the port settings, restarting the containers is required.
 ```
 docker-compose restart
 ```
 
-## Trouble Shooting
+## Trouble Shootings
 
 #### Gateway not found in remote control dashboard
 
