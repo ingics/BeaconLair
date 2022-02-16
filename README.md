@@ -56,7 +56,7 @@ Click on the sensor's reading area to the dashboard of the sensor reading chart.
 
 ## Architecture
 
-... block diagram ...
+![Block Diagram](../assets/beaconlair-block-diagram.jpeg?raw=true)
 
 ### MQTT Broker
 
