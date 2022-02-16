@@ -38,17 +38,21 @@ REBOOT
 ```
 The Host IP is how the iGS03 device connects to the BeaconLair Docker host. And the BeaconLair system will use it to configure the MQTT publish host, too.
 
-Then, open the BeaconLair URL "http://<Host IP>/grafana/" in browser, click on "Gateway Remote Control" link. You should see the iGS03 device.
+To visit the BeaconLair HOME dashboard, open the URL "http://\<Host IP\>:3000/grafana/" in the browser.
 
-... diagram of remote control UI ...
+![Home](../assets/beaconlair-home.png?raw=true)
+
+Click on "Gateway Remote Control" link. You should see the iGS03 device.
+
+![Remote Control](../assets/beaconlair-rc.png?raw=true)
 
 Click on "Auto SetUp" button of the gateway, the remote control service will configure the gateway's data publish to the BeaconLair system. Go back to the HOME dashboard, and click on the link "Beacon List". If your iBS0X beacons are already powered on, you should see them listed on the dashboard with the latest sensor readings.
 
-... diagram of sensor readings ...
+![Beacon List](../assets/beaconlair-beacons.png?raw=true)
 
-Click on the sensor's reading area to the dashboard of the sensor reading char.
+Click on the sensor's reading area to the dashboard of the sensor reading chart.
 
-... diagram of reading char ...
+![Sensor Readings](../assets/beaconlair-readings.png?raw=true)
 
 ## Architecture
 
@@ -104,7 +108,8 @@ The BeaconLair uses Grafana as frontend WebUI to provide dashboards for beacons,
 ## Configuration
 
 There are four TCP port configurations placed in the .env file.
-You can modify them if there is a port conflict issue on your docker host.```
+You can modify them if there is a port conflict issue on your docker host.
+```
 # MQTT port
 MQTT_PORT=1883
 
