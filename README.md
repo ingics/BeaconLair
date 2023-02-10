@@ -79,7 +79,7 @@ So we need a "Parser" service that subscribes to those raw data from the MQTT br
 Beacon payload formats:
 - [iBS01](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
 - [iBS02](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
-- [iBS03/04/05](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
+- [iBS03/04/05/06](https://www.ingics.com/doc/Beacon/BC0034_iBS_Sensor_Beacon_Payload.pdf)
 
 In BeaconLair, this service was developed in Golang. We also provides parser libraries in some languages for customer to implement their-own service.
 
