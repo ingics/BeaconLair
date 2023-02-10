@@ -1,46 +1,81 @@
 {
-    "annotations": {
-      "list": []
-    },
-    "editable": true,
-    "fiscalYearStartMonth": 0,
-    "graphTooltip": 0,
-    "id": 5,
-    "links": [],
-    "liveNow": false,
-    "panels": [
+  "annotations": {
+    "list": [
       {
-        "description": "",
-        "gridPos": {
-          "h": 6,
-          "w": 24,
-          "x": 0,
-          "y": 0
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
         },
-        "id": 2,
-        "options": {
-          "content": "# Weclome to BeaconLair\n\nFor iGS03 Remote Control, go [Gateway Remote Control](/d/dwnTbB07z/gateway-remote-control?orgId=1).\n\nFor iBS0X Beacon List view, go [Beacon List](/d/wOnCp8o7z/beacons?orgId=1).\n\nFor tracking sensor readings for single beacon, go [Sensor Readings](/d/OTjYRgAnz/readings-of-beacon?orgId=1).\n",
-          "mode": "markdown"
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
         },
-        "pluginVersion": "8.3.0",
-        "transparent": true,
-        "type": "text"
+        "type": "dashboard"
       }
-    ],
-    "schemaVersion": 33,
-    "style": "dark",
-    "tags": [],
-    "templating": {
-      "list": []
-    },
-    "time": {
-      "from": "now-6h",
-      "to": "now"
-    },
-    "timepicker": {},
-    "timezone": "",
-    "title": "Home",
-    "uid": "J65xORB7z",
-    "version": 1,
-    "weekStart": ""
-  }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "description": "",
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "code": {
+          "language": "plaintext",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "# Weclome to BeaconLair\n\nFor iGS03 Remote Control, go [Gateway Remote Control](/d/dwnTbB07z/gateway-remote-control?orgId=1).\n\nFor iBS0X Beacon List view, go [Beacon List](/d/wOnCp8o7z/beacons?orgId=1).\n\nFor tracking sensor readings for single beacon, go [Sensor Readings](/d/OTjYRgAnz/readings-of-beacon?orgId=1).\n",
+        "mode": "markdown"
+      },
+      "pluginVersion": "9.3.6",
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "refId": "A"
+        }
+      ],
+      "transparent": true,
+      "type": "text"
+    }
+  ],
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Home",
+  "version": 0,
+  "weekStart": ""
+}
